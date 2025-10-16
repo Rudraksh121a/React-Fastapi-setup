@@ -129,7 +129,7 @@ def cli_main():
     Start backend:
         cd {project_name}/backend
         uvicorn main:app --reload
-
+pip install build twine
     Start frontend:
         cd {project_name}/{frontend_dir.name}
         npm run dev

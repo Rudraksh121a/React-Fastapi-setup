@@ -1,13 +1,31 @@
-# React-Fastapi-setup
-# React-Fastapi-setup
-# React-Fastapi-setup
+# FastAPI React Web CLI
 
-# FastAPI + React CLI
+A modern CLI tool to scaffold a full-stack FastAPI + React project in seconds.
 
-## Install (editable/development mode)
+## Features at a Glance
+- Interactive CLI with prompts
+- Project templates:
+  - React (Vite)
+  - Next.js
+  - Eleventy (11ty)
+  - Vanilla JavaScript & TypeScript
+- Tailwind CSS integration (optional)
+- TypeScript support
+- Pick your favorite package manager (npm, yarn, pnpm)
+- ESLint pre-configured
+- Auto installs everything you need
+
+## Features
+- Instantly create a FastAPI backend with CORS and a sample API endpoint
+- Scaffold a React frontend (with Vite, TypeScript, and Tailwind support)
+- Automatic backend/frontend connection (proxy setup)
+- Python virtual environment setup with [uv](https://github.com/astral-sh/uv)
+- One command to get started: `fastapi-react-cli`
+
+## Installation
 
 ```bash
-pip install -e .
+pip install fastapi-react-web
 ```
 
 ## Usage
@@ -16,16 +34,38 @@ pip install -e .
 fastapi-react-cli
 ```
 
-This will launch the interactive setup wizard for your FastAPI + React project.
+Follow the interactive prompts to set up your project. The CLI will:
+- Ask for your project name
+- Scaffold backend and frontend
+- Set up a Python virtual environment and install backend dependencies
+- Set up the React frontend with Vite (and optionally Tailwind CSS)
 
-- To uninstall the CLI, run:
+## Running Your App
 
+### Start the backend
+```bash
+cd <your_project>/backend
+source ../venv/bin/activate
+uvicorn main:app --reload
+```
+
+### Start the frontend
+```bash
+cd <your_project>/<frontend_dir>
+npm install
+npm run dev
+```
+
+Visit [http://localhost:5173](http://localhost:5173) to see your app in action!
+
+## Uninstall
 ```bash
 pip uninstall fastapi-react-web
 ```
 
-```bash
-pip uninstall -y fastapi-react-cli
-find . -type d -name "*.egg-info" -exec rm -rf {} +
-pip install -e .
-```
+## License
+MIT
+
+---
+
+Made with ❤️ by Rudraksh121a
