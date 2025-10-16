@@ -1,3 +1,14 @@
+Metadata-Version: 2.4
+Name: fastapi-react-web
+Version: 0.1.0
+Summary: FastAPI + React project setup CLI
+Author: Rudraksh121a
+License: MIT
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: setuptools
+
 # React-Fastapi-setup
 # React-Fastapi-setup
 # React-Fastapi-setup
