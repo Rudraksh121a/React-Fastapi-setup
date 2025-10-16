@@ -16,7 +16,7 @@ def cli_main():
     backend_dir = project_dir / "backend"
     backend_dir.mkdir(exist_ok=True)
 
-    (backend_dir / "main.py").write_text(textwrap.dedent("""\
+    (backend_dir / "main.py").write_text(textwrap.dedent("""
         from fastapi import FastAPI
         from fastapi.middleware.cors import CORSMiddleware
 
@@ -36,6 +36,24 @@ def cli_main():
     """))
     print("Backend created successfully!\n")
 
+    # --- Create requirements.txt ---
+    req_file = backend_dir / "requirements.txt"
+    req_file.write_text("fastapi\nuvicorn\n")
+    print(f"requirements.txt created at {req_file.resolve()}")
+
+    # --- Always use default venv name ---
+    venv_name = "venv"
+    venv_dir = project_dir / venv_name
+    print(f"\nCreating virtual environment '{venv_name}'...")
+    if os.name == "nt":
+        venv_cmd = ["python", "-m", "venv", venv_name]
+        activate_cmd = f"{venv_name}\\Scripts\\activate"
+    else:
+        venv_cmd = ["python3", "-m", "venv", venv_name]
+        activate_cmd = f"source {venv_name}/bin/activate"
+    subprocess.run(venv_cmd, cwd=project_dir, check=True)
+    print(f"Virtual environment created at {venv_dir.resolve()}")
+
     # --- Frontend setup (interactive) ---
     print("Launching React/Vite setup wizard...\n")
     subprocess.run(
@@ -48,8 +66,7 @@ def cli_main():
     )
 
     # --- Detect frontend folder ---
-    # find the first folder created inside the project directory
-    created_dirs = [d for d in project_dir.iterdir() if d.is_dir() and d.name != "backend"]
+    created_dirs = [d for d in project_dir.iterdir() if d.is_dir() and d.name not in ["backend", venv_name]]
     if not created_dirs:
         print("Could not detect frontend folder. Please check the create-launcher output.")
         return
@@ -60,13 +77,11 @@ def cli_main():
     # --- Modify frontend to connect to backend ---
     app_file = frontend_dir / "src" / "App.jsx"
     if not app_file.exists():
-        # fallback for TS or different structure
         app_file = frontend_dir / "src" / "App.tsx"
 
     if app_file.exists():
-        app_file.write_text(textwrap.dedent("""\
+        app_file.write_text(textwrap.dedent("""
             import { useEffect, useState } from 'react'
-            
 
             function App() {
               const [message, setMessage] = useState('Connecting to backend...')
@@ -108,7 +123,7 @@ def cli_main():
             break
 
     if vite_config:
-        vite_config.write_text(textwrap.dedent("""\
+        vite_config.write_text(textwrap.dedent("""
             import { defineConfig } from 'vite'
             import react from '@vitejs/plugin-react'
 
@@ -123,15 +138,21 @@ def cli_main():
         """))
         print("Added Vite proxy to forward /api to FastAPI backend.")
 
+    # --- Final instructions ---
     print(textwrap.dedent(f"""
     All done!
 
+    To activate your environment and install backend dependencies, run:
+        cd {project_name}
+        {activate_cmd}
+        pip install -r backend/requirements.txt
+
     Start backend:
-        cd {project_name}/backend
+        cd backend
         uvicorn main:app --reload
-pip install build twine
+
     Start frontend:
-        cd {project_name}/{frontend_dir.name}
+        cd {frontend_dir.name}
         npm run dev
 
     Then open http://localhost:5173 in your browser
